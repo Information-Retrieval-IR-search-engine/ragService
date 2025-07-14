@@ -17,16 +17,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-OPENROUTER_API_KEY = "sk-or-..."  # Replace with env var or config in real deployment
-
+OPENROUTER_API_KEY = "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"  # Replace with env var or config in real deployment
+model = SentenceTransformer(f'quora_mpnet_v2_tuned_v3')
+index = faiss.read_index(f"quora_faiss_index_v3.index")
+docs = joblib.load(f"all_quora_doc_texts.joblib")
 @app.post("/rag")
 def rag_answer_api(query: str = Form(...), dataset: str = Form(...)):
-    model = SentenceTransformer(f'/content/drive/MyDrive/{dataset}_mpnet_v2_tuned_v3')
+    
     query_embedding = model.encode([query], convert_to_numpy=True)
     faiss.normalize_L2(query_embedding)
 
-    index = faiss.read_index(f"/content/drive/MyDrive/embeddings/{dataset}_faiss_index_v3.index")
-    docs = joblib.load(f"/content/drive/MyDrive/embeddings/all_{dataset}_doc_texts.joblib")
+
 
     D, I = index.search(query_embedding, 5)
     retrieved_docs = [docs[i] for i in I[0]]
