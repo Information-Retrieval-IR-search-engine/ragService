@@ -17,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-OPENROUTER_API_KEY = "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"  # Replace with env var or config in real deployment
+OPENROUTER_API_KEY = "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"  # Replace with env var or config in real deployment
 model = SentenceTransformer(f'quora_mpnet_v2_tuned_v3')
 index = faiss.read_index(f"quora_faiss_index_v3.index")
 docs = joblib.load(f"all_quora_doc_texts.joblib")
